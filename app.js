@@ -1,4 +1,5 @@
 var express = require('express');
+var multer = require('multer');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -22,8 +23,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
+app.use(multer({ dest: './uploads/' }));
+
+// app.use('/', routes);
+// app.use('/users', users);
+
+app.get('/', function (req, res) {
+  res.send('hello world');
+});
+
+app.post('/', function (req, res) {
+  console.log(req.body);
+  console.log(req.files);
+  res.status(204).end();
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -58,3 +71,5 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
+// curl -i -X POST -H "Content-Type: multipart/form-data" -F "file=@/Users/renatoramiro/Documents/script_upstart.txt" http://localhost:3000
